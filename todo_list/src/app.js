@@ -1,4 +1,5 @@
-import React from "react"
+import React from 'react'
+import Axios from 'axios'
 import {
     FormControl,
     Button
@@ -11,43 +12,81 @@ class App extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            activities:[
-                {id:1, name: 'Makan'},
-                {id:2, name: 'Tidur'},
-                {id:3, name: 'Codding'}
-            ]
+            activities:[]
         }
+    }
+
+    fetchData = () => {
+        Axios.get('http://localhost:2000/activities')
+        .then(res => {
+            this.setState({activities : res.data})
+        })
+    }
+
+    componentDidMount(){
+        this.fetchData()
+    }
+
+    // componentDidUpdate() {
+    //     alert('component did update')
+    // }
+
+    onAdd = () => {
+        // mempersiapkan data todo baru dan id nya
+        let newTodo = this.refs.todo.value
+
+        //siapkan object
+        let obj = {
+            name: newTodo,
+            isCompleted: false
+        }
+
+        //menambah data baru di db json
+        Axios.post('http://localhost:2000/activities', obj)
+        .then(res => {
+            console.log(res.data)
+            // Axios.get ('http://localhost:2000/activities')
+            //      .then.setState({activities:res.data})
+            //      })
+            this.fetchData()
+        })
+        
+        //untuk mengosongkan kembali form control
+        this.refs.todo.value = ''
+    }
+
+    onDelete = (id) =>{
+        Axios.delete(`http://localhost:2000/activities/${id}`)
+        .then(res => {
+            console.log(res.data)
+            this.fetchData()
+        })
+    }
+
+    onComplete = (id) => {
+        Axios.patch(`http://localhost:2000/activities/${id}`, {isCompleted: true})
+        .then(res => {
+            this.fetchData()
+        })
     }
 
     showdata = () => {
         return (
             this.state.activities.map(item => {
-                return <ToDoItem data={item} key={item.id} />
+                return (
+                    <ToDoItem 
+                        data={item} 
+                        key={item.id}
+                        delete={() => this.onDelete(item.id)}
+                        complete={()=> this.onComplete(item.id)}
+                    />)
             })
         )
     }
 
-    onAdd = () => {
-        // mempersiapkan data todo baru dan id nya
-        let newTodo = this.refs.todo.value
-        let id = this.state.activities[this.state.activities.length - 1].id + 1
-        
-        //menyiapkan array untuk state yang baru
-        let tempArr = [ ...this.state.activities]
-        
-        //menambahkan data baru ke dalam array tempArr
-        tempArr.push({id, name: newTodo})
-        //console.log(tempArr)
-        
-        //mengganti state activities menjadi tempArr dimana tempArr adalah array yang sudah dimasukan data baru
-        this.setState({activities: tempArr})
-
-        //untuk mengosongkan kembali form control
-        this.refs.todo.value = ''
-    }
-
     render() {
-        return (
+        // alert('Component Render')
+        return ( 
             <div style={styles.container}>
                 <h1>TO DO LIST</h1>
                 {this.showdata()}

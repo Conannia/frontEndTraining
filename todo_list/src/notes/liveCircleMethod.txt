@@ -1,0 +1,5 @@
+1. Ketika component pertama kali mount, dia akan memanggil render.
+2. Render akan terpanggil pertama kaliketika ada perubahan state atau props
+3. ComponentDidMount akan terpanggil HANYA SEKALI setelah render terpanggil pertama kali.
+4.ComponentDidUpdate akan terpanggil SETELAH ada perubahan state and props
+5. ComponentWillUnmount akan terpanggil setelah component di unmount
