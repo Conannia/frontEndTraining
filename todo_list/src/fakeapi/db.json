@@ -3,12 +3,12 @@
     {
       "id": 1,
       "name": "Makan",
-      "isCompleted": true
+      "isCompleted": false
     },
     {
       "id": 2,
       "name": "Tidur",
-      "isCompleted": true
+      "isCompleted": false
     },
     {
       "id": 3,
@@ -24,6 +24,11 @@
       "name": "Cuci Piring",
       "isCompleted": false,
       "id": 5
+    },
+    {
+      "name": "Cucu Baju",
+      "isCompleted": false,
+      "id": 6
     }
   ]
 }
